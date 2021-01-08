@@ -1,0 +1,255 @@
+%%%%%%%%%%%%%%%%%
+% This is an example CV created using altacv.cls (v1.3, 10 May 2020) written by
+% LianTze Lim (liantze@gmail.com), based on the
+% Cv created by BusinessInsider at http://www.businessinsider.my/a-sample-resume-for-marissa-mayer-2016-7/?r=US&IR=T
+%
+%% It may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2003/12/01 or later.
+%%%%%%%%%%%%%%%%
+
+%% If you are using \orcid or academicons
+%% icons, make sure you have the academicons
+%% option here, and compile with XeLaTeX
+%% or LuaLaTeX.
+% \documentclass[10pt,a4paper,academicons]{altacv}
+
+%% Use the "normalphoto" option if you want a normal photo instead of cropped to a circle
+% \documentclass[10pt,a4paper,normalphoto]{altacv}
+
+\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
+
+%% AltaCV uses the fontawesome5 and academicon fonts
+%% and packages.
+%% See http://texdoc.net/pkg/fontawesome5 and http://texdoc.net/pkg/academicons for full list of symbols. You MUST compile with XeLaTeX or LuaLaTeX if you want to use academicons.
+
+% Change the page layout if you need to
+\geometry{left=1.25cm,right=1.25cm,top=1.5cm,bottom=1.5cm,columnsep=1.2cm}
+
+% The paracol package lets you typeset columns of text in parallel
+\usepackage{paracol}
+
+
+% Change the font if you want to, depending on whether
+% you're using pdflatex or xelatex/lualatex
+\ifxetexorluatex
+  % If using xelatex or lualatex:
+  \setmainfont{Lato}
+\else
+  % If using pdflatex:
+  \usepackage[default]{lato}
+\fi
+
+% Change the colours if you want to
+\definecolor{VividPurple}{HTML}{3E0097}
+\definecolor{SlateGrey}{HTML}{2E2E2E}
+\definecolor{LightGrey}{HTML}{666666}
+% \colorlet{name}{black}
+% \colorlet{tagline}{PastelRed}
+\colorlet{heading}{VividPurple}
+\colorlet{headingrule}{VividPurple}
+% \colorlet{subheading}{PastelRed}
+\colorlet{accent}{VividPurple}
+\colorlet{emphasis}{SlateGrey}
+\colorlet{body}{LightGrey}
+
+% Change some fonts, if necessary
+% \renewcommand{\namefont}{\Huge\rmfamily\bfseries}
+% \renewcommand{\personalinfofont}{\footnotesize}
+% \renewcommand{\cvsectionfont}{\LARGE\rmfamily\bfseries}
+% \renewcommand{\cvsubsectionfont}{\large\bfseries}
+
+% Change the bullets for itemize and rating marker
+% for \cvskill if you want to
+\renewcommand{\itemmarker}{{\small\textbullet}}
+\renewcommand{\ratingmarker}{\faCircle}
+
+%% sample.bib contains your publications
+\addbibresource{sample.bib}
+
+\begin{document}
+\name{Victor Hugo Nagahama}
+% \tagline{Business Woman \& Proud Geek}
+% Cropped to square from https://en.wikipedia.org/wiki/Marissa_Mayer#/media/File:Marissa_Mayer_May_2014_(cropped).jpg, CC-BY 2.0
+%% You can add multiple photos on the left or right
+% \photoR{2.5cm}{mmayer-wikipedia-cc-by-2_0}
+% \photoL{2cm}{Yacht_High,Suitcase_High}
+\personalinfo{%
+  % Not all of these are required!
+  % You can add your own with \printinfo{symbol}{detail}
+  \printinfo{\faIcon{star}}{2 Feb 1996}
+  \location{Londrina, PR, Brazil}
+  \email{victorh.nagahama@gmail.com}
+  \phone{+55 44 99825-7275}
+%  \mailaddress{Address, Street, 00000 County}
+  \homepage{nagahamavh.github.io}
+%  \twitter{@marissamayer}
+  \linkedin{nagahamavh}
+  \github{nagahamaVH} % I'm just making this up though.
+%   \orcid{orcid.org/0000-0000-0000-0000} % Obviously making this up too. If you want to use this field (and also other academicons symbols), add "academicons" option to \documentclass{altacv}
+  %% You MUST add the academicons option to \documentclass, then compile with LuaLaTeX or XeLaTeX, if you want to use \orcid or other academicons commands.
+  % \orcid{0000-0000-0000-0000}
+  %% You can add your own arbtrary detail with
+  %% \printinfo{symbol}{detail}[optional hyperlink prefix]
+  % \printinfo{\faPaw}{Hey ho!}
+  %% Or you can declare your own field with
+  %% \NewInfoFiled{fieldname}{symbol}[optional hyperlink prefix] and use it:
+  % \NewInfoField{gitlab}{\faGitlab}[https://gitlab.com/]
+  % \gitlab{your_id}
+}
+
+\makecvheader
+
+%% Depending on your tastes, you may want to make fonts of itemize environments slightly smaller
+\AtBeginEnvironment{itemize}{\small}
+
+%% Set the left/right column width ratio to 6:4.
+\columnratio{0.6}
+
+% Start a 2-column paracol. Both the left and right columns will automatically
+% break across pages if things get too long.
+\begin{paracol}{2}
+
+\cvsection{Work Experience}
+
+\cvevent{AI Resident}{Hub of Artificial Intelligence - SENAI}{Jul 2020 -- Ongoing}{Londrina, PR, Brazil}
+Develop machine learning and AI solutions for Proof of Concepts (POCs). I worked with \textbf{deep learning}, \textbf{computer vision}, \textbf{parallel computing}, \textbf{crawler} and \textbf{data mining}.
+
+\divider
+
+\cvevent{Data Scientist}{Trade Technology}{Dec 2018 -- Apr 2020}{Maringá, PR, Brazil}
+Responsible for developing machine learning models for AI softwares and automation of reports with R, since data extraction, data analysis, insights and delivery via email. I worked with \textbf{time series}, \textbf{operational research}, \textbf{data science workflow}, \textbf{data mining}, \textbf{web scraping} and \textbf{exploratory analysis}.
+
+\divider
+
+\cvevent{Intern}{Trade Technology}{Sep 2018 -- Dec 2018}{Maringá, PR, Brazil}
+Responsible for automation of reports with R, since data extraction, data analysis, insights and delivery via email. I worked with \textbf{data science workflow}, \textbf{data mining}, \textbf{web scraping} and \textbf{exploratory analysis}.
+
+\cvsection{Projects}
+
+\cvevent{Intern}{Covideo 19 - Real-time monitoring of crowds using video surveillance}{}{}
+Develop an AI to detect and analyze crowds in public streets based on live video cameras. I worked with \textbf{deep learning}, \textbf{computer vision} and \textbf{spatial-temporal analysis}.
+
+\cvsection{Strengths}
+
+\cvtag{Machine Learning}
+\cvtag{Artificial Intelligence}
+\cvtag{Statistical Modeling}
+\cvtag{Data Science}
+\cvtag{Data Mining}
+\cvtag{Web Scraping}
+
+\divider \smallskip
+
+\cvtag{Critical Thinking}
+\cvtag{Innovation}
+\cvtag{Self-taught}
+\cvtag{Collaboration}
+
+% use ONLY \newpage if you want to force a page break for
+% ONLY the currentc column
+\newpage
+
+\cvsection{Short Courses Attended}
+
+\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
+	2019 & \textbf{Deep Reinforcement Learning with PyTorch}. Udemy, 6h \\
+	2019 & \textbf{Deep Learning}. IBM \\
+	2019 & \textbf{Data Science Foundations - Level 1}. IBM \\
+	2019 & \textbf{Introduction to Machine Learning with Sound}. IBM \\
+	2019 & \textbf{Watson Studio Essentials}. IBM \\
+	2019 & \textbf{Test Automation: TDD with Python}. Alura, 6h \\
+	2016 & \textbf{Big data and data visualization with R}. State University of Maringá, 6h \\
+	2015 & \textbf{Demystifying LaTeX}. State University of Maringá, 8h \\
+	2015 & \textbf{Survival Analysis}. State University of Maringá, 8h \\
+	2014 & \textbf{Introduction to R}. State University of Maringá, 16h
+\end{tabular}
+
+\cvsection{Poster Presentation}
+
+\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
+	2018 & \textbf{Linear Mixed Model: Biotherapeutics Effect on Mices Weights}. XIV Statistics Research Week, State University of Maringá \\
+	2016 & \textbf{Probabilistic Distributions for Proportions: A Baseball Application}. XIII Statistics Research Week, State University of Maringá
+\end{tabular}
+
+\cvsection{Seminars}
+
+\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
+	2017 & \textbf{The Importance of Junior Enterprise in formation of employees}. Statistics Research Week, Federal University of Paraná \\
+	2017 & \textbf{Safe Maringá}. XII Statistics Research Week, State University of Maringá
+\end{tabular}
+
+\cvsection{Research Projects}
+
+\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
+	2016 & \textbf{Introduction to Mixed Models} \newline
+	Undergraduate Research Project
+\end{tabular}
+
+%% Switch to the right column. This will now automatically move to the second
+%% page if the content is too long.
+\switchcolumn
+
+\cvsection{Technologies}
+
+\cvskill{Python}{5}
+\cvskill{R}{5}
+\cvskill{Git}{5}
+\cvskill{Microsoft Excel}{5}
+\cvskill{SQL}{4}
+\cvskill{Linux}{4}
+\cvskill{SAS}{4}
+\cvskill{\LaTeX}{4}
+\cvskill{Docker}{3}
+\cvskill{Bash}{3}
+\cvskill{NoSQL}{2}
+
+\cvsection{Languages}
+
+\cvskill{Portugese}{5}
+\cvskill{English}{4}
+
+\cvsection{Education}
+
+\cvevent{PGDip in Artificial Intelligence in Industry}{Faculdades da Indústria}{Jun 2020 -- Ongoing}{}
+
+\divider
+
+\cvevent{BSc in Statistics}{State University of Maringá}{Feb 2014 -- Feb 2019}{}
+
+\cvsection{Teaching Experience}
+
+\begin{tabular}{{p{0.05\textwidth}p{0.4\textwidth}}}
+	2016 & \textbf{Undergraduate Monitor} \newline
+	Probability and Statistical Inference \newline
+	State University of Maringá \\
+	2015 & \textbf{Undergraduate Monitor} \newline
+	Probability and Statistics \newline
+	State University of Maringá \\
+	2015 & \textbf{Short Course Instructor} \newline
+	Introduction to R \newline
+	State University of Maringá \\	
+\end{tabular}
+
+\newpage
+
+\cvsection{Others}
+
+{\large \faIcon{briefcase} \textbf{Junior Enterprise}}
+
+\begin{tabular}{{p{0.11\textwidth}p{0.25\textwidth}}}
+	2016 - 2017 & \textbf{President} \newline
+	Estats Consulting \\
+	2015 - 2016 & \textbf{Communication Manager} \newline
+	Estats Consulting \\
+	2014 - 2015 & \textbf{Project Advisor} \newline
+	Estats Consulting \\
+\end{tabular}
+
+\end{paracol}
+
+\end{document}
