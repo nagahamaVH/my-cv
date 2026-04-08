@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%
-% This is an example CV created using altacv.cls (v1.3, 10 May 2020) written by
-% LianTze Lim (liantze@gmail.com), based on the
-% Cv created by BusinessInsider at http://www.businessinsider.my/a-sample-resume-for-marissa-mayer-2016-7/?r=US&IR=T
+% This is an sample CV template created using altacv.cls
+% (v1.7.4, 30 Jul 2025) written by LianTze Lim (liantze@gmail.com), based on the
+% CV created by BusinessInsider at http://www.businessinsider.my/a-sample-resume-for-marissa-mayer-2016-7/?r=US&IR=T
 %
 %% It may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3
@@ -12,20 +12,12 @@
 %% version 2003/12/01 or later.
 %%%%%%%%%%%%%%%%
 
-%% If you are using \orcid or academicons
-%% icons, make sure you have the academicons
-%% option here, and compile with XeLaTeX
-%% or LuaLaTeX.
-% \documentclass[10pt,a4paper,academicons]{altacv}
-
 %% Use the "normalphoto" option if you want a normal photo instead of cropped to a circle
-% \documentclass[10pt,a4paper,normalphoto]{altacv}
+% \documentclass[10pt,a4paper,withhypeper,normalphoto]{altacv}
 
-\documentclass[10pt,a4paper,ragged2e,withhyper]{altacv}
-
-%% AltaCV uses the fontawesome5 and academicon fonts
-%% and packages.
-%% See http://texdoc.net/pkg/fontawesome5 and http://texdoc.net/pkg/academicons for full list of symbols. You MUST compile with XeLaTeX or LuaLaTeX if you want to use academicons.
+\documentclass[10pt,a4paper,withhyper]{altacv}
+%% AltaCV uses the fontawesome5 and simpleicons packages.
+%% See http://texdoc.net/pkg/fontawesome5 and http://texdoc.net/pkg/simpleicons for full list of symbols.
 
 % Change the page layout if you need to
 \geometry{left=1.25cm,right=1.25cm,top=1.5cm,bottom=1.5cm,columnsep=1.2cm}
@@ -36,7 +28,9 @@
 
 % Change the font if you want to, depending on whether
 % you're using pdflatex or xelatex/lualatex
-\ifxetexorluatex
+% WHEN COMPILING WITH XELATEX PLEASE USE
+% xelatex -shell-escape -output-driver="xdvipdfmx -z 0" mmayer.tex
+\iftutex
   % If using xelatex or lualatex:
   \setmainfont{Lato}
 \else
@@ -65,40 +59,72 @@
 
 % Change the bullets for itemize and rating marker
 % for \cvskill if you want to
-\renewcommand{\itemmarker}{{\small\textbullet}}
-\renewcommand{\ratingmarker}{\faCircle}
+\renewcommand{\cvItemMarker}{{\small\textbullet}}
+\renewcommand{\cvRatingMarker}{\faCircle}
+% ...and the markers for the date/location for \cvevent
+% \renewcommand{\cvDateMarker}{\faCalendar*[regular]}
+% \renewcommand{\cvLocationMarker}{\faMapMarker*}
+
+
+% If your CV/résumé is in a language other than English,
+% then you probably want to change these so that when you
+% copy-paste from the PDF or run pdftotext, the location
+% and date marker icons for \cvevent will paste as correct
+% translations. For example Spanish:
+% \renewcommand{\locationname}{Ubicación}
+% \renewcommand{\datename}{Fecha}
+
+
+%% Use (and optionally edit if necessary) this .tex if you
+%% want to use an author-year reference style like APA(6)
+%% for your publication list
+% \input{pubs-authoryea}
+
+%% Use (and optionally edit if necessary) this .tex if you
+%% want an originally numerical reference style like IEEE
+%% for your publication list
+\input{pubs-num}
 
 %% sample.bib contains your publications
-% \addbibresource{sample.bib}
+\addbibresource{sample.bib}
 
 \begin{document}
 \name{Victor Hugo Nagahama}
-% \tagline{Business Woman \& Proud Geek}
+\tagline{}
 % Cropped to square from https://en.wikipedia.org/wiki/Marissa_Mayer#/media/File:Marissa_Mayer_May_2014_(cropped).jpg, CC-BY 2.0
 %% You can add multiple photos on the left or right
 % \photoR{2.5cm}{mmayer-wikipedia-cc-by-2_0}
 % \photoL{2cm}{Yacht_High,Suitcase_High}
 \personalinfo{%
   % Not all of these are required!
-  % You can add your own with \printinfo{symbol}{detail}
-  \location{Maynooth, Kildare, Ireland}
   \email{victorh.nagahama@gmail.com}
-  \phone{+353 83 090 3889}
-%  \mailaddress{Address, Street, 00000 County}
-  \homepage{nagahamavh.github.io}
-%  \twitter{@marissamayer}
+  \phone{(+353) 083 090 3889}
+  % \mailaddress{Address, Street, 00000 County}
+  \location{Maringá, Paraná, Brazil}
   \linkedin{nagahamavh}
-  \github{nagahamaVH} % I'm just making this up though.
-%   \orcid{orcid.org/0000-0000-0000-0000} % Obviously making this up too. If you want to use this field (and also other academicons symbols), add "academicons" option to \documentclass{altacv}
-  %% You MUST add the academicons option to \documentclass, then compile with LuaLaTeX or XeLaTeX, if you want to use \orcid or other academicons commands.
-  % \orcid{0000-0000-0000-0000}
-  %% You can add your own arbtrary detail with
+  % \twitter{@marissamayer}
+  % \xtwitter{@marissamayer}
+  \homepage{nagahamavh.github.io}
+  \github{nagahamavh} % I'm just making this up though.
+  \orcid{0009-0008-2774-5308} % Obviously making this up too.
+  %% You can add your own arbitrary detail with
   %% \printinfo{symbol}{detail}[optional hyperlink prefix]
-  % \printinfo{\faPaw}{Hey ho!}
+  %% \printinfo{\faPaw}{Hey ho!}
   %% Or you can declare your own field with
   %% \NewInfoFiled{fieldname}{symbol}[optional hyperlink prefix] and use it:
   % \NewInfoField{gitlab}{\faGitlab}[https://gitlab.com/]
   % \gitlab{your_id}
+	%%
+  %% For services and platforms like Mastodon where there isn't a
+  %% straightforward relation between the user ID/nickname and the hyperlink,
+  %% you can use \printinfo directly e.g.
+  % \printinfo{\faMastodon}{@username@instace}[https://instance.url/@username]
+  %% But if you absolutely want to create new dedicated info fields for
+  %% such platforms, then use \NewInfoField* with a star:
+  % \NewInfoField*{mastodon}{\faMastodon}
+  %% then you can use \mastodon, with TWO arguments where the 2nd argument is
+  %% the full hyperlink.
+  % \mastodon{@username@instance}{https://instance.url/@username}
 }
 
 \makecvheader
@@ -113,38 +139,97 @@
 % break across pages if things get too long.
 \begin{paracol}{2}
 
-\cvsection{Work Experience}
+% ------------------- Experience
+\cvsection{Experience}
 
-\cvevent{Quantitative Risk Intern}{Grant Thornton Ireland}{July 2022 -- September 2022}{Dublin, Ireland}
-Develop statistical and machine learning models for Economical, Social and Governance and Climate \& Environmental Risk. I worked with \textbf{tree based algorithms}, \textbf{linear mixed models} and \textbf{data science workflow}. This internship was part of my 12-week work placement from my PhD program.
-
-\divider
-
-\cvevent{AI Resident}{Hub of Artificial Intelligence - FIEP}{Aug 2020 -- Jul 2021}{Londrina, PR, Brazil}
-Develop machine learning and AI solutions for Proof of Concepts (POCs). I worked with \textbf{deep learning}, \textbf{computer vision}, \textbf{parallel computing}, \textbf{crawler} and \textbf{data mining}.
+\cvevent{Associate (Part-time)}{Grant Thornton Ireland}{Jan 2023 -- Aug 2023}{Dublin, Co. Dublin, Ireland}
+Designed and implemented an interactive tool for forecasting problems. I worked with \textbf{hierarchical time series modelling}, \textbf{R package} and \textbf{Shiny dashboard} development.
 
 \divider
 
-\cvevent{Data Scientist}{Trade Technology}{Dec 2018 -- Apr 2020}{Maringá, PR, Brazil}
-Responsible for developing machine learning models for AI softwares and automation of reports with R, since data extraction, data analysis, insights and delivery via email. I worked with \textbf{time series}, \textbf{operational research}, \textbf{data science workflow}, \textbf{data mining}, \textbf{web scraping} and \textbf{exploratory analysis}.
+\cvevent{Quantitative Risk Intern}{Grant Thornton Ireland}{Jul 2022 -- Sep 2022}{Dublin, Co. Dublin, Ireland}
+Develop statistical and machine learning models for Economical, Social and Governance and Climate \& Environmental Risk. I worked with \textbf{tree based algorithms}, \textbf{linear mixed models} and \textbf{data science workflow}.
 
 \divider
 
-\cvevent{Intern}{Trade Technology}{Sep 2018 -- Dec 2018}{Maringá, PR, Brazil}
-Responsible for automation of reports with R, since data extraction, data analysis, insights and delivery via email. I worked with \textbf{data science workflow}, \textbf{data mining}, \textbf{web scraping} and \textbf{exploratory analysis}.
+\cvevent{AI Resident}{Hub of Artificial Intelligence SENAI}{Jul 2020 -- Jul 2021}{Londrina, Paraná, Brazil}
+Designed and implemented solutions based on machine learning and AI models to address real-world industry problems. I worked with \textbf{deep learning}, \textbf{computer vision}, \textbf{parallel computing}, \textbf{web crawling} and \textbf{data mining}.
 
+\divider
+
+\cvevent{Data Scientist}{Trade Technology}{Dec 2018 -- Apr 2020}{Maringá, Paraná, Brazil}
+Designed and implemented solutions based on machine learning and AI models, and developed an automated reporting system in R integrated with SQL databases and mailing services. Covered the full data science workflow, from data collection and cleaning to analysis and communication. I worked with \textbf{time series models}, \textbf{linear programming}, \textbf{data science workflow}, \textbf{data mining}, \textbf{web scraping} and \textbf{data visualisation}.
+
+\divider
+
+\cvevent{Intern}{Trade Technology}{Sep 2018 --  Dec 2018}{Maringá, Paraná, Brazil}
+Developed an automated reporting system in R integrated with SQL databases and mailing services. Covered the full data science workflow, from data collection and cleaning to analysis and communication. I worked with \textbf{data science workflow}, \textbf{data mining}, \textbf{web scraping} and \textbf{data visualisation}.
+
+\newpage
+
+% ------------------- Projects
 \cvsection{Projects}
 
-\cvevent{}{Covideo 19 - Real-time monitoring of crowds using video surveillance}{Jun 2020 -- Jul 2021}{}
-Develop an AI to detect and analyze crowds in public streets based on live video cameras. I worked with \textbf{deep learning}, \textbf{computer vision} and \textbf{spatial-temporal analysis}.
+\cvevent{}{CoVideo-19:Real-Time Crowd Monitoring through Video Surveillance}{Jun 2020 -- Jul 2021}{}
+Developed a computer vision model to detect and analyse crowd dynamics in public streets using live video cameras. I worked with \textbf{deep learning}, \textbf{computer vision} and \textbf{spatio-temporal analysis}.
 
+% ------------------- Publications
+\cvsection{Publications}
+
+%% Specify your last name(s) and first name(s) as given in the .bib to automatically bold your own name in the publications list.
+%% One caveat: You need to write \bibnamedelima where there's a space in your name for this to work properly; or write \bibnamedelimi if you use initials in the .bib
+%% You can specify multiple names, especially if you have changed your name or if you need to highlight multiple authors.
+\mynames{Victor\bibnamedelima Hugo\bibnamedelima Nagahama}
+  
+%% MAKE SURE THERE IS NO SPACE AFTER THE FINAL NAME IN YOUR \mynames LIST
+
+\nocite{*}
+
+\printbibliography[heading=pubtype,title={\printinfo{\faFile*[regular]}{Journal Articles}}, type=misc]
+
+%\divider
+%\printbibliography[heading=pubtype,title={\printinfo{\faUsers}{Presentations}}, type=inproceedings]
+
+% ----------------------------- Column 2
+\switchcolumn
+
+\cvsection{Languages}
+
+\cvskill{Portuguese}{5}
+\cvskill{English}{4.5}
+
+% ------------------- Technologies
+\cvsection{Technologies}
+
+\cvskill{R}{5}
+\cvskill{Python}{5}
+\cvskill{Git}{5}
+\cvskill{Stan}{4.5}
+\cvskill{SQL}{4}
+\cvskill{Linux}{4}
+\cvskill{SAS}{4}
+\cvskill{Docker}{3.5}
+\cvskill{NoSQL}{3}
+\cvskill{C++}{3}
+
+% ------------------- Education
+\cvsection{Education}
+
+\cvevent{PhD in Data Science}{Maynooth University}{Sep 2021 -- Ongoing}{}
+
+\divider
+\cvevent{PgDip in Artificial Intelligence applied to Industry}{Faculdade de Tecnologia SENAI}{Aug 2020 -- Jul 2021}{}
+
+\divider
+\cvevent{BSc in Statistics}{State University of Maringá}{Feb 2014 -- Feb 2019}{}
+
+% ------------------- Strengths
 \cvsection{Strengths}
 
+\cvtag{Statistical Modelling}
 \cvtag{Machine Learning}
 \cvtag{Artificial Intelligence}
-\cvtag{Statistical Modelling}
-\cvtag{Data Science workflow}
-\cvtag{Data Mining}
+\cvtag{Data Science}
 
 \divider \smallskip
 
@@ -153,96 +238,34 @@ Develop an AI to detect and analyze crowds in public streets based on live video
 \cvtag{Self-taught}
 \cvtag{Collaboration}
 
-% use ONLY \newpage if you want to force a page break for
-% ONLY the currentc column
 \newpage
 
-\cvsection{Short Courses Attended}
+% ------------------- Teaching experience
+\cvsection{Teaching experience}
 
-\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
-	2019 & \textbf{Deep Reinforcement Learning with PyTorch}. Udemy, 6h \\
-	2019 & \textbf{Deep Learning}. IBM \\
-	2019 & \textbf{Data Science Foundations - Level 1}. IBM \\
-	2019 & \textbf{Introduction to Machine Learning with Sound}. IBM \\
-	2019 & \textbf{Watson Studio Essentials}. IBM \\
-	2019 & \textbf{Test Automation: TDD with Python}. Alura, 6h \\
-	2016 & \textbf{Big data and data visualisation with R}. State University of Maringá, 6h \\
-	2015 & \textbf{Demystifying LaTeX}. State University of Maringá, 8h \\
-	2015 & \textbf{Survival Analysis}. State University of Maringá, 8h \\
-	2014 & \textbf{Introduction to R}. State University of Maringá, 16h
-\end{tabular}
+\cvevent{Tutor}{Maynooth University}{2022 -- 2024}{}
+\begin{itemize}
+    \item Introduction to Data Science 1 (DS151)
+    \item Introduction to Data Science 2 (DS152)
+    \item Data Analysis (ST201)
+    \item Design and Analysis of Experiments (ST202)
+    \item R for Statistics and Data Science (ST203)
+\end{itemize}
 
-\cvsection{Poster Presentation}
-%
-\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
-	2018 & \textbf{Linear Mixed Model: Biotherapeutics Effect on Mices Weights}. XIV Statistics Research Week, State University of Maringá \\
-	2016 & \textbf{Probabilistic Distributions for Proportions: A Baseball Application}. XIII Statistics Research Week, State University of Maringá
-\end{tabular}
+\divider
+\cvevent{Tutor}{State University of Maringá}{2015 -- 2016}{}
+\begin{itemize}
+    \item Probability and Statistical Inference
+    \item Probability and Statistics
+\end{itemize}
 
-\cvsection{Seminars}
+\divider
+\cvevent{Short Course Instructor}{State University of Maringá}{2015}{}
+\begin{itemize}
+    \item Introduction to R
+\end{itemize}
 
-\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
-	2017 & \textbf{The Importance of Junior Enterprise in formation of employees}. Statistics Research Week, Federal University of Paraná \\
-	2017 & \textbf{Safe Maringá}. XII Statistics Research Week, State University of Maringá
-\end{tabular}
-
-\cvsection{Research Projects}
-
-\begin{tabular}{{p{0.05\textwidth}p{0.47\textwidth}}}
-	2016 & \textbf{Introduction to Mixed Models} \newline
-	Undergraduate Research Project
-\end{tabular}
-
-%% Switch to the right column. This will now automatically move to the second
-%% page if the content is too long.
-\switchcolumn
-
-\cvsection{Technologies}
-
-\cvskill{Python}{5}
-\cvskill{R}{5}
-\cvskill{Git}{5}
-\cvskill{Microsoft Excel}{5}
-\cvskill{SQL}{4}
-\cvskill{Linux}{4}
-\cvskill{SAS}{4}
-\cvskill{\LaTeX}{4}
-\cvskill{Docker}{3}
-\cvskill{Bash}{3}
-\cvskill{NoSQL}{2}
-
-\cvsection{Languages}
-
-\cvskill{Portugese}{5}
-\cvskill{English}{4}
-
-\cvsection{Education}
-
-\cvevent{PhD in Data Science}{Maynooth University}{Sep 2021 -- Ongoing}{}
-
-\cvevent{PGDip in Artificial Intelligence in Industry}{Faculties of Industry}{Aug 2020 -- Jul 2021}{}
-
-\cvevent{BSc in Statistics}{State University of Maringá}{Feb 2014 -- Feb 2019}{}
-
-\cvsection{Teaching Experience}
-
-\begin{tabular}{{p{0.05\textwidth}p{0.4\textwidth}}}
-	2022 & \textbf{Tutor} \newline
-	Introduction to Data Science 1 - DS151 \newline
-	Maynooth University \\
-	2016 & \textbf{Tutor} \newline
-	Probability and Statistical Inference \newline
-	State University of Maringá \\
-	2015 & \textbf{Tutor} \newline
-	Probability and Statistics \newline
-	State University of Maringá \\
-	2015 & \textbf{Short Course Instructor} \newline
-	Introduction to R \newline
-	State University of Maringá \\	
-\end{tabular}
-
-\newpage
-
+% ------------------- Others
 \cvsection{Others}
 
 {\large \faIcon{briefcase} \textbf{Junior Enterprise}}

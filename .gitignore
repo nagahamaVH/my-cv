@@ -7,3 +7,5 @@
 *.gz
 *.xmpi
 *.blg
+*.fdb_latexmk
+*.fls

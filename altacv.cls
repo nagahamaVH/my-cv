@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%
-% This is altacv.cls (v1.3.3, 31 October 2020) written by
+% This is altacv.cls (v1.7.4, 30 Jul 2025) written by
 % LianTze Lim (liantze@gmail.com).
 %
 %% It may be distributed and/or modified under the
@@ -15,14 +15,16 @@
 % - https://github.com/akreuzer Added ragged2e option (5 Nov 2018)
 % - https://github.com/stefanogermano Fixed bad boxes and undefined font shape (July 2018)
 % - https://github.com/foohyfooh Fixed blank spaces in \cvevent and bad link in README.md (June 2018)
+% - https://github.com/logological Remove redundant hyperref and typos (Apr 2021)
 
 %%%%%%%%%%%%%%%%
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{altacv}[2020/05/17 AltaCV v1.3.3, yet another alternative class for a resume/curriculum vitae.]
+\ProvidesClass{altacv}[2025/07/30 AltaCV v1.7.4, yet another alternative class for a resume/curriculum vitae.]
 
 %% v1.1: Optionally load academicons
-\newif\if@academicons
-\DeclareOption{academicons}{\@academiconstrue}
+%% v1.4: Nope, academicons is unnecessary; fontawesome5 has \faOrcid.
+%% v1.7.3: Re backward compatibility we'll now load academicons automatically for \aiOrcid if ≤TL2019 i.e. if \faOrcid undefined
+\DeclareOption{academicons}{\ClassWarning{altacv}{academicons option is now obsolete and unnecessary.}}
 %% v1.1.3: Choice of round/square photo
 \newif\if@normalphoto
 \DeclareOption{normalphoto}{\@normalphototrue}
@@ -30,38 +32,48 @@
 \newif\if@raggedtwoe
 \DeclareOption{ragged2e}{\@raggedtwoetrue}
 %% v1.3: load hyperref for clickable hyperlinks
-\newif\if@withhyper
+\newif\if@withhyper\@withhyperfalse
 \DeclareOption{withhyper}{\@withhypertrue}
 \ProcessOptions\relax
 
-\LoadClass{article}
+\LoadClass{extarticle}
+\RequirePackage{etoolbox}
+%% v1.7.4: use etoolbox toggles to fix accsupp ActualText bugs when withhyper enabled
+\newtoggle{withhyper}\togglefalse{withhyper}
+\if@withhyper\toggletrue{withhyper}\fi
+% v1.7.3 Load xcolor early to avoid receiving `hyperref` option from pdfx package
+\RequirePackage{xcolor}
 %% v1.3.2 Hopefully this helps make the PDF
 %% file more 'friendly' with copy-paste etc
 \RequirePackage[a-1b]{pdfx}
-%% v1.3.3 Temporary fix for pdfx and biblatex incompatibility
-%% (Thanks to @badetitou for highlighting this issue)
-%% https://github.com/plk/biblatex/issues/1044
-%% Will be removed when fix is released in biblatex 3.16
-\catcode30=12
-\RequirePackage[margin=2cm]{geometry}
-\RequirePackage[fixed]{fontawesome5}
-\RequirePackage{ifxetex,ifluatex}
-\RequirePackage{scrlfile}
+\RequirePackage{accsupp}
+%% v1.7.3 Avoid 'Token not allowed' when \\ used with accsupp
+\pdfstringdefDisableCommands{
+  \let\\\space
+}
 \RequirePackage{xparse}
+\RequirePackage[margin=2cm]{geometry}
+\RequirePackage[fixed]{fontawesome5}%[2020-01-15]
 
-%% v1.1.5: added for convenience
-\newif\ifxetexorluatex
-\ifxetex
-  \xetexorluatextrue
-\else
-  \ifluatex
-    \xetexorluatextrue
+% 1.7.3 For backward compatibility
+\providecommand\IfFormatAtLeastTF{\@ifl@t@r\fmtversion}
+\IfFormatAtLeastTF{2021-11-15}{}{\RequirePackage{scrlfile}}
+
+% v1.7.2 Add simpleicons to provide X icon
+% v1.7.3 But first check if the package files exist
+\IfFileExists{simpleiconsglyphs-pdftex.tex}{\RequirePackage{simpleicons}}{}
+
+% v1.7.3 Use iftex for easier access to \iftutex
+\RequirePackage{iftex}
+% ...but still check for backward compatibility
+\ifundef{\iftutex}{%
+  \newif\iftutex
+  \ifxetex\tutextrue
   \else
-    \xetexorluatexfalse
+    \ifluatex\tutextrue\else\tutexfalse\fi
   \fi
-\fi
-
-\ifxetexorluatex
+}{}
+\iftutex 
   \RequirePackage{fontspec}
 \else
   %% v1.3.2 attempts to make ligatures
@@ -77,57 +89,17 @@
   \pdfgentounicode=1
 \fi
 
-%% v1.1: Optionally load academicons
-%% v1.1.5: Handle different versions of academicons
-\if@academicons
-  \ifxetexorluatex
-    \RequirePackage{fontspec}
-    %% academicons in TL2018 doesn't require
-    %% Academicons to be installed in OS fonts
-    %% so can be loaded directly
-    \@ifl@t@r\fmtversion{2018/04/01}{%
-      \RequirePackage{academicons}
-    }{%
-      % TL2017
-      \@ifl@t@r\fmtversion{2017/04/01}{%
-        \@ifpackagelater{academicons}{2018/03/01}{%
-          \RequirePackage{academicons}
-        }{%
-          \let\ori@newfontfamily\newfontfamily%
-          \renewcommand{\newfontfamily}[2]{}
-          \RequirePackage{academicons}
-          \let\newfontfamily\ori@newfontfamily
-          \newfontfamily{\AI}{academicons.ttf}
-        }
-      }{% TL2016 requires the package to be loaded before
-        % the version can be checked. Only added because
-        % Overleaf v1 still runs TL2016; will be removed
-        % when v1 is completely retired.
-          \let\ori@newfontfamily\newfontfamily%
-          \renewcommand{\newfontfamily}[2]{}
-          \RequirePackage{academicons}
-          \let\newfontfamily\ori@newfontfamily
-          \newfontfamily{\AI}{academicons.ttf}
-      }
-    }
-  \else
-    \ClassError{AltaCV}{academicons unsupported by latex or pdflatex. Please compile with xelatex or lualatex}{Please compile with xelatex or lualatex to use the academicons option}
-  \fi
-\fi
-
 \if@raggedtwoe
   \RequirePackage[newcommands]{ragged2e}
 \fi
 
-\if@withhyper
-  \AtBeginDocument{%
-    \RequirePackage{hyperref}
-    \hypersetup{hidelinks}
-    \urlstyle{same}
-  }
-\fi
-
-\RequirePackage{xcolor}
+% 1.7.3 For backward compatibility re hooks management
+\iftoggle{withhyper}{%
+\IfFormatAtLeastTF{2020-10-01}{%
+  \AddToHook{begindocument/before}{\hypersetup{hidelinks}\urlstyle{same}}
+}{%
+  \AtBeginDocument{\hypersetup{hidelinks}\urlstyle{same}}
+}}{}
 
 \colorlet{accent}{blue!70!black}
 \colorlet{emphasis}{black}
@@ -137,21 +109,27 @@
 \colorlet{body}{black!80!white}
 \colorlet{name}{heading}
 \colorlet{tagline}{accent}
-\newcommand{\itemmarker}{{\small\textbullet}}
-\newcommand{\ratingmarker}{\faCircle}
+% Renamed or added v1.7
+\newcommand{\cvItemMarker}{{\small\textbullet}}
+\newcommand{\cvRatingMarker}{\faCircle}
+\let\itemmarker\cvItemMarker      % for backward compatibility
+\let\ratingmarker\cvRatingMarker  % for backward compatibility
+\newcommand{\cvDateMarker}{\faCalendar[regular]}
+\newcommand{\cvLocationMarker}{\faMapMarker}
+\newcommand{\locationname}{Location}
+\newcommand{\datename}{Date}
 
 \RequirePackage{tikz}
 \usetikzlibrary{arrows}
 \RequirePackage[skins]{tcolorbox}
 \RequirePackage[inline]{enumitem}
 \setlist{leftmargin=*,labelsep=0.5em,nosep,itemsep=0.25\baselineskip,after=\vspace{0.25\baselineskip}}
-\setlist[itemize]{label=\itemmarker}
+\setlist[itemize]{label=\cvItemMarker}
 \RequirePackage{graphicx}
-\RequirePackage{etoolbox}
+\RequirePackage{trimclip}
 \RequirePackage{dashrule}
 \RequirePackage{multirow,tabularx}
 \RequirePackage{changepage}
-% \RequirePackage{marginfix}
 
 \setlength{\parindent}{0pt}
 \newcommand{\divider}{\textcolor{body!30}{\hdashrule{\linewidth}{0.6pt}{0.5ex}}\medskip}
@@ -177,36 +155,56 @@
 }%
 }
 %% v1.3: Incorporating hyperlinks
-%% v1.3.1: using \unfriendlydetokenize to avoid
-%% breaking unicode
+%% v1.3.1: using \utffriendlydetokenize to avoid breaking unicode
+%% v1.6: Use accsupp so that when copying/pasting the icon from PDF to a text
+%%       file, the icon name is pasted
+%% v1.7: Some tweaks/corrections so that accsupp is for icons only
+%% v1.7.1: Bugfix to support some symbol commands e.g. academicons commands 
 \ExplSyntaxOn
-\NewDocumentCommand{\printinfo}{m m o}{%
-  \IfNoValueTF{#3}{%
-    \mbox{\textcolor{accent}{\normalfont #1}~\utffriendlydetokenize{#2}\hspace{2em}}%
-  }{%
-     \if@withhyper%
-      \mbox{\textcolor{accent}{\normalfont #1}~
-      \href{#3}{\utffriendlydetokenize{#2}}\hspace{2em}}
-     \else%
+\NewDocumentCommand{\printinfo}{o m m o}{%
+  \IfNoValueTF{#4}{%
+    \mbox{\textcolor{accent}%
+    {\BeginAccSupp{method=escape,ActualText={\IfNoValueTF{#1}{\detokenize{#2}}{#1}:\space}}\normalfont #2\EndAccSupp{}}%
+    ~\utffriendlydetokenize{#3}\hspace{2em}}%
+  }{% v1.7.4: fix accsupp ActualText bugs when withhyper enabled
+    \iftoggle{withhyper}{%
+      \mbox{\textcolor{accent}%
+      {\BeginAccSupp{method=escape,ActualText={\IfNoValueTF{#1}{\detokenize{#2}}{#1}:\space}}\normalfont #2\EndAccSupp{}}%
+      ~%
+      \BeginAccSupp{method=escape,ActualText={#4}}%
+      \href{#4}{\utffriendlydetokenize{#3}}%
+      \EndAccSupp{}%
+      \hspace{2em}}%
+     }{%
        \ClassWarning{Please specify [withhyper] option to enable hyperlinks. Printing out full hyperlink prefix #1 for now.}%
-      \mbox{\textcolor{accent}{\normalfont #1}~{\utffriendlydetokenize{#3#2}}\hspace{2em}}%
-     \fi%
+      \mbox{\textcolor{accent}
+      {\BeginAccSupp{method=escape,ActualText={\IfNoValueTF{#1}{\detokenize{#2}}{#1}:\space}}\normalfont #2\EndAccSupp{}}%
+      ~{\utffriendlydetokenize{#4}}\hspace{2em}}%
+    }%
   }%
 }%
 
+
 %% v1.3: Exploring convenient creation of fields
-\NewDocumentCommand{\NewInfoField}{m m o}{%
-  \IfNoValueF{#3}{\csdef{#1 hyperprefix}{#3}}%
-  \csdef{#1 symbol}{#2}%
-  \csdef{#1}##1{%
-    \if@withhyper
-      \IfNoValueTF {#3}
-        {\printinfo{\csuse{#1 symbol}}{##1}}%
-        {\printinfo{\csuse{#1 symbol}}{##1}[\csuse{#1 hyperprefix}##1]}%
-    \else
-      \printinfo{\csuse{#1 symbol}}{##1}%
-    \fi%
+%% v1.6: Add starred mode to create \printinfo with full URL
+\NewDocumentCommand{\NewInfoField}{s m m o}{%
+  \IfBooleanF{#1}{
+    \IfNoValueF{#4}{\csdef{#2 hyperprefix}{#4}}%
   }
+  \csdef{#2 symbol}{#3}
+  \IfBooleanTF{#1}
+    { \csdef{#2}##1##2{%
+        \IfNoValueTF {##2}
+          {\printinfo[#2]{\csuse{#2 symbol}}{##1}}%
+          {\printinfo[#2]{\csuse{#2 symbol}}{##1}[##2]}%
+      }%
+    }
+    { \csdef{#2}##1{%
+        \IfNoValueTF {#4}
+          {\printinfo[#2]{\csuse{#2 symbol}}{##1}}%
+          {\printinfo[#2]{\csuse{#2 symbol}}{##1}[\csuse{#2 hyperprefix}##1]}%
+      }%
+    }
 }
 \ExplSyntaxOff
 
@@ -215,13 +213,29 @@
 \newcommand{\personalinfo}[1]{\def\@personalinfo{#1}}
 \NewInfoField{email}{\faAt}[mailto:]
 \NewInfoField{mailaddress}{\faEnvelope}
-\NewInfoField{phone}{\faPhone}
+\NewInfoField{phone}{\faPhone}[tel:]
 \NewInfoField{homepage}{\faGlobe}[https://]
 \NewInfoField{twitter}{\faTwitter}[https://twitter.com/]
+% v1.7.2 twitter.com is now X.com; v1.7.3 but only use the new icon if it's been defined
+\ifcsdef{simpleicon@xicon}
+ {\NewInfoField{xtwitter}{\raisebox{-0.2ex}{\scalebox{0.95}{\simpleicon{x}}}\,}[https://x.com/]}
+ {\let\xtwitter\twitter%
+  \pretocmd{\xtwitter}{\ClassWarning{altacv}{You tried to use \string\xtwitter, but the new X icon isn't available. Please ensure you have updated the `simpleicons' package. Falling back to \string\twitter\space icon for now}}{}{}%
+ }
 \NewInfoField{linkedin}{\faLinkedin}[https://linkedin.com/in/]
 \NewInfoField{github}{\faGithub}[https://github.com/]
-\NewInfoField{orcid}{\aiOrcid}[https://orcid.org/]
-\NewInfoField{location}{\faMapMarker}
+% v1.7.3 Backward compatibility for ORCiD icon
+\ifdef{\faOrcid}{
+  \NewInfoField{orcid}{\faOrcid}[https://orcid.org/]
+}{\iftutex
+    \RequirePackage{academicons}
+    \NewInfoField{orcid}{\aiOrcid\space}[https://orcid.org/]
+  \else
+    \ClassWarning{altacv}{ORCID icon for \string\orcid\space unavailable in pdflatex. Please compile with XeLaTeX or LuaLaTeX; or upgrade your LaTeX distribution and packages}
+    \NewInfoField{orcid}{\fbox{O?}\space}[https://orcid.org/]
+  \fi
+}
+\NewInfoField{location}{\cvLocationMarker}
 
 % v1.2: Support for multiple photos
 \newlength{\altacv@photos@width}
@@ -288,7 +302,7 @@
 \renewenvironment{quote}{\color{accent}\itshape\large}{\par}
 
 \newcommand{\cvsection}[2][]{%
-  \bigskip%
+  \nointerlineskip\bigskip%  %% bugfix in v1.6.2
   \ifstrequal{#1}{}{}{\marginpar{\vspace*{\dimexpr1pt-\baselineskip}\raggedright\input{#1}}}%
   {\color{heading}\cvsectionfont\MakeUppercase{#2}}\\[-1ex]%
   {\color{headingrule}\rule{\linewidth}{2pt}\par}\medskip
@@ -300,20 +314,30 @@
 }
 
 % v1.1.4: fixes inconsistent font size
+% v1.7: adds accsupp ActualText for location and date markers
 \newcommand{\cvevent}[4]{%
   {\large\color{emphasis}#1\par}
   \smallskip\normalsize
   \ifstrequal{#2}{}{}{
   \textbf{\color{accent}#2}\par
   \smallskip}
-  \ifstrequal{#3}{}{}{{\small\makebox[0.5\linewidth][l]{\faCalendar~#3}}}%
-  \ifstrequal{#4}{}{}{{\small\makebox[0.5\linewidth][l]{\faMapMarker~#4}}}\par
+  \ifstrequal{#3}{}{}{%
+    {\small\makebox[0.5\linewidth][l]%
+      {\BeginAccSupp{method=pdfstringdef,ActualText={\datename:}}\cvDateMarker\EndAccSupp{}%
+      ~#3}%
+    }}%
+  \ifstrequal{#4}{}{}{%
+    {\small\makebox[0.5\linewidth][l]%
+      {\BeginAccSupp{method=pdfstringdef,ActualText={\locationname:}}\cvLocationMarker\EndAccSupp{}%
+        ~#4}%
+    }}\par
   \medskip\normalsize
 }
 
+% v1.7: adds accsupp for the icon as well
 \newcommand{\cvachievement}[3]{%
   \begin{tabularx}{\linewidth}{@{}p{2em} @{\hspace{1ex}} >{\raggedright\arraybackslash}X@{}}
-  \multirow{2}{*}{\Large\color{accent}#1} & \bfseries\textcolor{emphasis}{#2}\\
+  \multirow{2}{*}{\Large\color{accent}\BeginAccSupp{method=escape,ActualText={#1: }}#1\EndAccSupp{}} & \bfseries\textcolor{emphasis}{#2}\\
   & #3
   \end{tabularx}%
   \smallskip
@@ -323,10 +347,17 @@
   \tikz[baseline]\node[anchor=base,draw=body!30,rounded corners,inner xsep=1ex,inner ysep =0.75ex,text height=1.5ex,text depth=.25ex]{#1};
 }
 
+% v1.6: Use accsupp so that the actual numeric value is copied/pasted
+%       and also support 0.5, 1.5, 2.5, 3.5, 4.5
 \newcommand{\cvskill}[2]{%
-\textcolor{emphasis}{\textbf{#1}}\hfill
-\foreach \x in {1,...,5}{%
-  \space{\ifnumgreater{\x}{#2}{\color{body!30}}{\color{accent}}\ratingmarker}}\par%
+  \textcolor{emphasis}{\textbf{#1}}\hfill
+  \BeginAccSupp{method=plain,ActualText={#2}}
+  \foreach \x in {1,...,5}{%
+    \ifdimequal{\x pt - #2 pt}{0.5pt}%
+    {\clipbox*{0pt -0.25ex {.5\width} {\totalheight}}{\color{accent}\cvRatingMarker}%
+     \clipbox*{{.5\width} -0.25ex {\width} {\totalheight}}{\color{body!30}\cvRatingMarker}}
+    {\ifdimgreater{\x bp}{#2 bp}{\color{body!30}}{\color{accent}}\cvRatingMarker}%
+  }\EndAccSupp{}\par%
 }
 
 % Adapted from @Jake's answer at http://tex.stackexchange.com/a/82729/226
@@ -374,7 +405,8 @@
             (-\newcumnum:\innerradius) arc (-\newcumnum:-(\cumnum):\innerradius) -- cycle;
 
             % Draw the data labels
-            \draw  [*-,thin,emphasis] node [append after command={(\midangle:\midradius pt) -- (\midangle:\outerradius + 1ex) -- (\tikzlastnode)}] at (\midangle:\outerradius + 1ex) [xshift=\labelshiftdir*0.5cm,inner sep=1ex, outer sep=0pt, text width=\width,anchor=\textanchor,align=\textalign,font=\small,text=body]{\name};
+            % v1.6: Use accsupp so that the numeric number is copied/pasted too
+            \draw  [*-,thin,emphasis] node [append after command={(\midangle:\midradius pt) -- (\midangle:\outerradius + 1ex) -- (\tikzlastnode)}] at (\midangle:\outerradius + 1ex) [xshift=\labelshiftdir*0.5cm,inner sep=1ex, outer sep=0pt, text width=\width,anchor=\textanchor,align=\textalign,font=\small,text=body]{\BeginAccSupp{method=pdfstringdef,ActualText={\name: \value}}\name\EndAccSupp{}};
             % Set the old cumulated angle to the new value
             \global\let\cumnum=\newcumnum
         }
@@ -396,15 +428,9 @@
 
 \newenvironment{cvcolumn}[1]{\begin{minipage}[t]{#1}\raggedright}{\end{minipage}}
 
-\RequirePackage[backend=biber,style=authoryear,sorting=ydnt]{biblatex}
-%% For removing numbering entirely when using a numeric style
-% \setlength{\bibhang}{1em}
-% \DeclareFieldFormat{labelnumberwidth}{\makebox[\bibhang][l]{\itemmarker}}
-% \setlength{\biblabelsep}{0pt}
-\defbibheading{pubtype}{\cvsubsection{#1}}
-\renewcommand{\bibsetup}{\vspace*{-\baselineskip}}
-\AtEveryBibitem{\makebox[\bibhang][l]{\itemmarker}}
-\setlength{\bibitemsep}{0.25\baselineskip}
+% v1.5 Move biblatex-related code to separate .cfg file
+% so that it's easier to change and customise the style for
+% publication lists
 
 % v1.1.2: make it easier to add a sidebar aligned with top of next page
 \RequirePackage{afterpage}
@@ -414,8 +440,52 @@
 }
 \newcommand{\addnextpagesidebar}[2][]{\afterpage{\addsidebar[#1]{#2}}}
 
-\AtBeginDocument{%
-  \pagestyle{empty}
-  \color{body}
-  \raggedright
+% v1.6.5 But provide for ability to highlight names in publication list
+\RequirePackage{pgffor}
+\def\my@namelist{}
+\newcommand{\mynames}[1]{\def\my@namelist{#1}}
+\newtoggle{boldname}
+% v1.7.3 For backward compatibility re hooks management
+\IfFormatAtLeastTF{2021-11-15}{%
+  \AddToHook{package/biblatex/after}{%
+    \typeout{OK AddToHook biblatex after works}
+    \altacv@makeboldnames
+  }%
+}{%
+  \AfterPackage{biblatex}{%
+    \typeout{OK AfterPackage biblatex after works}
+    \altacv@makeboldnames
+  }%
+}
+
+\newcommand{\altacv@makeboldnames}{%
+  \renewcommand*{\mkbibnamefamily}[1]{%
+    \global\togglefalse{boldname}%
+    \foreach \my@fname / \my@gname in \my@namelist {%
+      \ifboolexpr{ test {\ifdefstrequal{\namepartfamily}{\my@fname}}
+                   and
+                   test {\ifdefstrequal{\namepartgiven}{\my@gname}}}
+        {\global\toggletrue{boldname}}{}%
+    }%
+    \iftoggle{boldname}{\textbf{##1}}{##1}%
+  }%
+  % v1.7.4 will handle "von" "van" etc prefixes and "Jr" etc suffixes too
+  \let\mkbibnamegiven\mkbibnamefamily%
+  \let\mkbibnameprefix\mkbibnamefamily%
+  \let\mkbibnamesuffix\mkbibnamefamily%
+}
+
+% 1.7.3 Backward compatibility for hooks management
+\IfFormatAtLeastTF{2020-10-01}{%
+  \AddToHook{begindocument/before}{%
+    \pagestyle{empty}%
+    \color{body}%
+    \raggedright%
+  }
+}{%
+  \AtBeginDocument{%
+    \pagestyle{empty}%
+    \color{body}%
+    \raggedright%
+  }
 }
